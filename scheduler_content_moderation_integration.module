@@ -117,22 +117,28 @@ function scheduler_content_moderation_integration_entity_base_field_info(EntityT
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_alter().
  */
-function scheduler_content_moderation_integration_form_node_form_alter(&$form, FormStateInterface $form_state) {
+function scheduler_content_moderation_integration_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Get all 'add' and 'edit' form ids for all supported entity types.
+  $scheduler_manager = \Drupal::service('scheduler.manager');
+  if (!in_array($form_id, $scheduler_manager->getEntityFormIds())) {
+    return;
+  }
+
   // Attach the publish/un-publish state form elements to the scheduler
   // settings group.
   $form['publish_state']['#group'] = 'scheduler_settings';
   $form['unpublish_state']['#group'] = 'scheduler_settings';
 
   $config = \Drupal::config('scheduler.settings');
-  /** @var \Drupal\node\NodeTypeInterface $type */
-  $type = $form_state->getFormObject()->getEntity()->type->entity;
+  /** @var \Drupal\Core\Entity\EntityInterface $entity */
+  $entity = $form_state->getFormObject()->getEntity();
 
   // If scheduling for publish/unpublish is not enabled, then hide the state
   // selection field.
-  $form['publish_state']['#access'] = $type->getThirdPartySetting('scheduler', 'publish_enable', $config->get('default_publish_enable'));
-  $form['unpublish_state']['#access'] = $type->getThirdPartySetting('scheduler', 'unpublish_enable', $config->get('default_unpublish_enable'));
+  $form['publish_state']['#access'] = $scheduler_manager->getThirdPartySetting($entity, 'publish_enable', $config->get('default_publish_enable'));
+  $form['unpublish_state']['#access'] = $scheduler_manager->getThirdPartySetting($entity, 'unpublish_enable', $config->get('default_unpublish_enable'));
 }
 
 /**
