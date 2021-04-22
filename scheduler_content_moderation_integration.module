@@ -68,8 +68,12 @@ function scheduler_content_moderation_integration_entity_access(EntityInterface 
  */
 function scheduler_content_moderation_integration_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
-
-  if ($entity_type->id() === 'node') {
+  // Cater for all entity types supported by the Scheduler entity plugins.
+  $entity_types = &drupal_static(__FUNCTION__);
+  if (empty($entity_types)) {
+    $entity_types = \Drupal::service('scheduler.manager')->getPluginEntityTypes();
+  }
+  if (in_array($entity_type->id(), $entity_types)) {
     $fields['publish_state'] = BaseFieldDefinition::create('list_string')
       ->setSetting('allowed_values_function', '_scheduler_content_moderation_integration_states_values')
       ->setLabel(t('Publish state'))
