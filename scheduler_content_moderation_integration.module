@@ -305,6 +305,15 @@ function scheduler_content_moderation_integration_scheduler_publish_action($node
 }
 
 /**
+ * Implements hook_scheduler_TYPE_publish_action() for Media.
+ */
+function scheduler_content_moderation_integration_scheduler_media_publish_action($entity) {
+  // This can be chained back to the original node version, as the processing
+  // is identical.
+  return scheduler_content_moderation_integration_scheduler_publish_action($entity);
+}
+
+/**
  * Implements hook_scheduler_unpublish_action().
  *
  * This hook is called from schedulerManger::unpublish(). The return values are:
@@ -336,4 +345,13 @@ function scheduler_content_moderation_integration_scheduler_unpublish_action($no
     $node->save();
     return -1;
   }
+}
+
+/**
+ * Implements hook_scheduler_TYPE_unpublish_action() for Media.
+ */
+function scheduler_content_moderation_integration_scheduler_media_unpublish_action($entity) {
+  // This can be chained back to the original node version, as the processing
+  // is identical.
+  return scheduler_content_moderation_integration_scheduler_unpublish_action($entity);
 }
