@@ -32,15 +32,21 @@ function scheduler_content_moderation_integration_entity_access(EntityInterface 
   /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
   $moderation_info = Drupal::service('content_moderation.moderation_information');
 
-  if ($operation === 'update' && $moderation_info->isModeratedEntity($entity) && $entity->moderation_state
-    && ($entity->publish_on->value || $entity->unpublish_on->value)) {
+  if ($operation === 'update' && $moderation_info->isModeratedEntity($entity) && $entity->moderation_state) {
+    $states = [];
+    if (isset($entity->publish_state) && isset($entity->publish_on->value)) {
+      $states[] = $entity->publish_state;
+    }
+    if (isset($entity->unpublish_state) && isset($entity->unpublish_on->value)) {
+      $states[] = $entity->unpublish_state;
+    }
 
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $moderation_info->getWorkflowForEntity($entity);
     $current_state = $workflow->getTypePlugin()->getState($entity->moderation_state->value);
     /** @var \Drupal\content_moderation\StateTransitionValidation $transition_validation */
     $transition_validation = \Drupal::service('content_moderation.state_transition_validation');
-    foreach ([$entity->publish_state, $entity->unpublish_state] as $state) {
+    foreach ($states as $state) {
       try {
         $scheduled_state = $workflow->getTypePlugin()->getState($state->value);
         if (!$transition_validation->isTransitionValid($workflow, $current_state, $scheduled_state, $account, $entity)) {
