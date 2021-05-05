@@ -3,13 +3,13 @@
 namespace Drupal\Tests\scheduler_content_moderation_integration\Functional;
 
 /**
- * Test covering the UnpublishedStateConstraintValidator.
+ * Test covering the UnPublishedStateConstraintValidator.
  *
- * @coversDefaultClass \Drupal\scheduler_content_moderation_integration\Plugin\Validation\Constraint\UnpublishStateConstraintValidator
+ * @coversDefaultClass \Drupal\scheduler_content_moderation_integration\Plugin\Validation\Constraint\UnPublishStateConstraintValidator
  *
  * @group scheduler
  */
-class UnpublishedStateConstraintTest extends SchedulerContentModerationBrowserTestBase {
+class UnPublishedStateConstraintTest extends SchedulerContentModerationBrowserTestBase {
 
   /**
    * Test published to unpublished transition.
