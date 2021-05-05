@@ -7,8 +7,9 @@ use Drupal\Core\Url;
 /**
  * Test if layout builder can be accessed.
  *
+ * @group scheduler_content_moderation_integration
+ *
  * @see https://www.drupal.org/project/scheduler_content_moderation_integration/issues/3048485
- * @group scheduler
  */
 class LayoutBuilderTest extends SchedulerContentModerationBrowserTestBase {
 

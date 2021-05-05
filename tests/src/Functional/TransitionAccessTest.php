@@ -7,7 +7,7 @@ namespace Drupal\Tests\scheduler_content_moderation_integration\Functional;
  *
  * @coversDefaultClass \Drupal\scheduler_content_moderation_integration\Plugin\Validation\Constraint\TransitionAccessConstraintValidator
  *
- * @group scheduler
+ * @group scheduler_content_moderation_integration
  */
 class TransitionAccessTest extends SchedulerContentModerationBrowserTestBase {
 

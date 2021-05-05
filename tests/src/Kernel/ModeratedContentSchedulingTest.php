@@ -5,7 +5,7 @@ namespace Drupal\Tests\scheduler_content_moderation_integration\Kernel;
 /**
  * Tests publishing/unpublishing scheduling for moderated nodes.
  *
- * @group scheduler
+ * @group scheduler_content_moderation_integration
  */
 class ModeratedContentSchedulingTest extends SchedulerContentModerationTestBase {
 

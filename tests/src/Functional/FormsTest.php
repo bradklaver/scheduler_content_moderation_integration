@@ -5,7 +5,7 @@ namespace Drupal\Tests\scheduler_content_moderation_integration\Functional;
 /**
  * Test covering manipulation of add and edit entity forms.
  *
- * @group scheduler
+ * @group scheduler_content_moderation_integration
  */
 class FormsTest extends SchedulerContentModerationBrowserTestBase {
 
@@ -115,7 +115,7 @@ class FormsTest extends SchedulerContentModerationBrowserTestBase {
     $data = [];
     foreach ($this->dataEntityTypes() as $entity_types) {
       $data[] = array_merge($entity_types, ['add']);
-      // $data[] = array_merge($entity_types, ['edit']);
+      $data[] = array_merge($entity_types, ['edit']);
     }
     return $data;
   }

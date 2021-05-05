@@ -8,8 +8,6 @@ use Drupal\Tests\scheduler\Traits\SchedulerMediaSetupTrait;
 
 /**
  * Base class from which all functional browser tests can be extended.
- *
- * @group scheduler
  */
 class SchedulerContentModerationBrowserTestBase extends BrowserTestBase {
 
