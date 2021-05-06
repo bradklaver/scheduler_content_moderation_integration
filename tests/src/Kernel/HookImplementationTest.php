@@ -7,7 +7,7 @@ use Drupal\node\Entity\Node;
 /**
  * Tests the Scheduler hook functions implemented by this module.
  *
- * @group scheduler_content_moderation_integration_content_moderation_integration
+ * @group scheduler_content_moderation_integration
  */
 class HookImplementationTest extends SchedulerContentModerationTestBase {
 
