@@ -5,7 +5,7 @@
  * Scheduler Content Moderation Integration.
  *
  * This sub-module provides extended options widget populated with default
- * revision states to allow publishing and un-publishing of nodes which are
+ * revision states to allow publishing and un-publishing of entities which are
  * moderated.
  *
  * @see https://www.drupal.org/project/scheduler/issues/2798689
@@ -213,12 +213,12 @@ function _scheduler_content_moderation_integration_states_values(FieldStorageDef
 }
 
 /**
- * Implements hook_scheduler_hide_publish_on_field().
+ * Implements hook_scheduler_hide_publish_date().
  *
- * This hook is called from scheduler_form_node_form_alter() and returns TRUE if
- * the scheduler publish_on field should be hidden.
+ * This hook is called from scheduler_form_{type}_form_alter() and returns TRUE
+ * if the scheduler publish_on field should be hidden.
  */
-function scheduler_content_moderation_integration_scheduler_hide_publish_on_field($form, $form_state, $entity) {
+function scheduler_content_moderation_integration_scheduler_hide_publish_date($form, $form_state, $entity) {
   /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_information */
   $moderation_information = \Drupal::service('content_moderation.moderation_information');
 
@@ -233,21 +233,12 @@ function scheduler_content_moderation_integration_scheduler_hide_publish_on_fiel
 }
 
 /**
- * Implements hook_scheduler_TYPE_hide_publish_on_field() for Media.
- */
-function scheduler_content_moderation_integration_scheduler_media_hide_publish_on_field($form, $form_state, $entity) {
-  // This can be chained back to the original node version, as the processing
-  // is identical.
-  return scheduler_content_moderation_integration_scheduler_hide_publish_on_field($form, $form_state, $entity);
-}
-
-/**
- * Implements hook_scheduler_hide_unpublish_on_field().
+ * Implements hook_scheduler_hide_unpublish_date().
  *
- * This hook is called from scheduler_form_node_form_alter() and returns TRUE if
- * the scheduler unpublish_on field should be hidden.
+ * This hook is called from scheduler_form_{type}_form_alter() and returns TRUE
+ * if the scheduler unpublish_on field should be hidden.
  */
-function scheduler_content_moderation_integration_scheduler_hide_unpublish_on_field($form, $form_state, $entity) {
+function scheduler_content_moderation_integration_scheduler_hide_unpublish_date($form, $form_state, $entity) {
   /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_information */
   $moderation_information = \Drupal::service('content_moderation.moderation_information');
 
@@ -262,96 +253,69 @@ function scheduler_content_moderation_integration_scheduler_hide_unpublish_on_fi
 }
 
 /**
- * Implements hook_scheduler_TYPE_hide_unpublish_on_field() for Media.
- */
-function scheduler_content_moderation_integration_scheduler_media_hide_unpublish_on_field($form, $form_state, $entity) {
-  // This can be chained back to the original node version, as the processing
-  // is identical.
-  return scheduler_content_moderation_integration_scheduler_hide_unpublish_on_field($form, $form_state, $entity);
-}
-
-/**
- * Implements hook_scheduler_publish_action().
+ * Implements hook_scheduler_publish_process().
  *
  * This hook is called from schedulerManger::publish(). The return values are:
- * 1  if the node has been processed here and hence should not be published via
- *    Scheduler.
- * -1 if an exception is thrown, to abandon processing this node in Scheduler.
- * 0  if not moderated, to let Scheduler process the node as normal.
+ * 1  if the entity has been processed here and hence should not be published
+ *    via Scheduler.
+ * -1 if an exception is thrown, to abandon processing this entity in Scheduler.
+ * 0  if not moderated, to let Scheduler process the entity as normal.
  */
-function scheduler_content_moderation_integration_scheduler_publish_action($node) {
+function scheduler_content_moderation_integration_scheduler_publish_process($entity) {
   /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_information */
   $moderation_information = \Drupal::service('content_moderation.moderation_information');
 
-  if (!$moderation_information->isModeratedEntity($node)) {
+  if (!$moderation_information->isModeratedEntity($entity)) {
     return 0;
   }
 
-  $state = $node->publish_state->value;
-  $node->publish_state->value = NULL;
+  $state = $entity->publish_state->value;
+  $entity->publish_state->value = NULL;
 
   /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModerationInterface $type_plugin */
-  $type_plugin = $moderation_information->getWorkflowForEntity($node)->getTypePlugin();
+  $type_plugin = $moderation_information->getWorkflowForEntity($entity)->getTypePlugin();
   try {
     // If transition is not valid, throw exception.
-    $type_plugin->getTransitionFromStateToState($node->moderation_state->value, $state);
-    $node->set('moderation_state', $state);
+    $type_plugin->getTransitionFromStateToState($entity->moderation_state->value, $state);
+    $entity->set('moderation_state', $state);
     return 1;
   }
   catch (\InvalidArgumentException $exception) {
-    $node->save();
+    $entity->save();
     return -1;
   }
 }
 
 /**
- * Implements hook_scheduler_TYPE_publish_action() for Media.
- */
-function scheduler_content_moderation_integration_scheduler_media_publish_action($entity) {
-  // This can be chained back to the original node version, as the processing
-  // is identical.
-  return scheduler_content_moderation_integration_scheduler_publish_action($entity);
-}
-
-/**
- * Implements hook_scheduler_unpublish_action().
+ * Implements hook_scheduler_unpublish_process().
  *
  * This hook is called from schedulerManger::unpublish(). The return values are:
- * 1  if the node has been processed here and hence should not be unpublished
+ * 1  if the entity has been processed here and hence should not be unpublished
  *    via Scheduler.
- * -1 if an exception is thrown, to abandon processing this node in Scheduler.
- * 0  if not moderated, to let Scheduler process the node as normal.
+ * -1 if an exception is thrown, to abandon processing this entity in Scheduler.
+ * 0  if not moderated, to let Scheduler process the entity as normal.
  */
-function scheduler_content_moderation_integration_scheduler_unpublish_action($node) {
+function scheduler_content_moderation_integration_scheduler_unpublish_process($entity) {
   /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_information */
   $moderation_information = \Drupal::service('content_moderation.moderation_information');
 
-  if (!$moderation_information->isModeratedEntity($node)) {
+  if (!$moderation_information->isModeratedEntity($entity)) {
     return 0;
   }
 
-  $state = $node->unpublish_state->value;
-  $node->unpublish_state->value = NULL;
+  $state = $entity->unpublish_state->value;
+  $entity->unpublish_state->value = NULL;
 
   /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModerationInterface $type_plugin */
-  $type_plugin = $moderation_information->getWorkflowForEntity($node)->getTypePlugin();
+  $type_plugin = $moderation_information->getWorkflowForEntity($entity)->getTypePlugin();
   try {
     // If transition is not valid, throw exception.
-    $type_plugin->getTransitionFromStateToState($node->moderation_state->value, $state);
-    $node->set('moderation_state', $state);
+    $type_plugin->getTransitionFromStateToState($entity->moderation_state->value, $state);
+    $entity->set('moderation_state', $state);
     return 1;
   }
   catch (\InvalidArgumentException $exception) {
-    $node->save();
+    $entity->save();
     return -1;
   }
-}
-
-/**
- * Implements hook_scheduler_TYPE_unpublish_action() for Media.
- */
-function scheduler_content_moderation_integration_scheduler_media_unpublish_action($entity) {
-  // This can be chained back to the original node version, as the processing
-  // is identical.
-  return scheduler_content_moderation_integration_scheduler_unpublish_action($entity);
 }

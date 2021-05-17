@@ -55,10 +55,10 @@ class HookImplementationTest extends SchedulerContentModerationTestBase {
     $form['publish_state']['widget'][0]['#options'] = $options;
     $form['unpublish_state']['widget'][0]['#options'] = $options;
 
-    $result = scheduler_content_moderation_integration_scheduler_hide_publish_on_field($form, [], $node);
+    $result = scheduler_content_moderation_integration_scheduler_hide_publish_date($form, [], $node);
     $this->assertEquals($expected, $result, sprintf('Hide the publish-on field: Expected %s, Result %s', $expected ? 'Yes' : 'No', $result ? 'Yes' : 'No'));
 
-    $result = scheduler_content_moderation_integration_scheduler_hide_unpublish_on_field($form, [], $node);
+    $result = scheduler_content_moderation_integration_scheduler_hide_unpublish_date($form, [], $node);
     $this->assertEquals($expected, $result, sprintf('Hide the unpublish-on field: Expected %s, Result %s', $expected ? 'Yes' : 'No', $result ? 'Yes' : 'No'));
   }
 
