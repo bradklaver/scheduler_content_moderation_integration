@@ -161,8 +161,8 @@ abstract class SchedulerContentModerationBrowserTestBase extends BrowserTestBase
    */
   public function dataEntityTypes() {
     $data = [
-      0 => ['node', 'page'],
-      1 => ['media', 'soundtrack'],
+      '#node' => ['node', 'page'],
+      '#media' => ['media', 'soundtrack'],
     ];
     return $data;
   }

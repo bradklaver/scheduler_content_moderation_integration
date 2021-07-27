@@ -150,8 +150,8 @@ abstract class SchedulerContentModerationTestBase extends KernelTestBase {
    */
   public function dataEntityTypes() {
     $data = [
-      0 => ['node', 'example'],
-      1 => ['media', 'soundtrack'],
+      '#node' => ['node', 'example'],
+      '#media' => ['media', 'soundtrack'],
     ];
     return $data;
   }
