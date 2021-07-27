@@ -15,10 +15,8 @@ build:
         coder-version: ^8.2@stable
       container_command:
         commands:
-          # Get latest dev version of Scheduler
-          - "cd ${SOURCE_DIR} && sudo -u www-data composer require drupal/scheduler:1.x-dev"
-          # Apply the Scheduler non-node entity patch
-          - 'cd ${SOURCE_DIR}/modules/contrib/scheduler; pwd; sudo -u www-data curl "https://git.drupalcode.org/project/scheduler/-/merge_requests/3.diff" | sudo -u www-data patch -p1'
+          # Get latest dev version of Scheduler 2.x
+          - "cd ${SOURCE_DIR} && sudo -u www-data composer require drupal/scheduler:2.x-dev"
     testing:
       run_tests.standard:
         types: 'Simpletest,PHPUnit-Unit,PHPUnit-Kernel,PHPUnit-Functional'
