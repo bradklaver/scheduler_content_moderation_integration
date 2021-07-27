@@ -5,6 +5,7 @@ namespace Drupal\Tests\scheduler_content_moderation_integration\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\scheduler\Traits\SchedulerMediaSetupTrait;
+use Drupal\Tests\scheduler\Traits\SchedulerSetupTrait;
 
 /**
  * Base class from which all functional browser tests can be extended.
@@ -15,6 +16,7 @@ abstract class SchedulerContentModerationBrowserTestBase extends BrowserTestBase
 
   use ContentModerationTestTrait;
   use SchedulerMediaSetupTrait;
+  use SchedulerSetupTrait;
 
   /**
    * {@inheritdoc}

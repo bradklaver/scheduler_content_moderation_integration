@@ -8,6 +8,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Action;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\scheduler\Traits\SchedulerMediaSetupTrait;
+use Drupal\Tests\scheduler\Traits\SchedulerSetupTrait;
 
 /**
  * Base class for the Scheduler Content Moderation tests.
@@ -16,6 +17,7 @@ abstract class SchedulerContentModerationTestBase extends KernelTestBase {
 
   use ContentModerationTestTrait;
   use SchedulerMediaSetupTrait;
+  use SchedulerSetupTrait;
 
   /**
    * Moderation info service.
