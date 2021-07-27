@@ -3,14 +3,14 @@
 namespace Drupal\Tests\scheduler_content_moderation_integration\Kernel;
 
 /**
- * Tests publishing/unpublishing scheduling for moderated nodes.
+ * Tests publishing/unpublishing scheduling for moderated entities.
  *
  * @group scheduler_content_moderation_integration
  */
 class ModeratedContentSchedulingTest extends SchedulerContentModerationTestBase {
 
   /**
-   * Tests moderated nodes publish scheduling.
+   * Tests moderated entity publish scheduling.
    *
    * @dataProvider dataEntityTypes()
    */
@@ -26,19 +26,20 @@ class ModeratedContentSchedulingTest extends SchedulerContentModerationTestBase 
     ]);
     $revision_id = $entity->getRevisionId();
 
-    // Make sure node is unpublished.
-    $this->assertEquals(FALSE, $entity->isPublished());
+    // Make sure entity is unpublished.
+    $this->assertFalse($entity->isPublished());
+    $this->assertEquals(1, $revision_id, 'The initial revision id is 1');
 
     $this->container->get('cron')->run();
 
     $entity = $storage->loadRevision($storage->getLatestRevisionId($entity->id()));
 
-    // Assert node is now published.
-    $this->assertEquals(TRUE, $entity->isPublished());
+    // Assert entity is now published.
+    $this->assertTrue($entity->isPublished());
     $this->assertEquals('published', $entity->moderation_state->value);
 
     // Assert only one revision is created during the operation.
-    $this->assertEquals($revision_id + 1, $entity->getRevisionId());
+    $this->assertEquals(2, $entity->getRevisionId(), 'After publishing, the revision id is 2');
 
     $entity->set($titleField, 'Draft title');
     $entity->moderation_state->value = 'draft';
@@ -54,13 +55,13 @@ class ModeratedContentSchedulingTest extends SchedulerContentModerationTestBase 
 
     // Assert that the entity is published after cron.
     $entity = $storage->loadRevision($storage->getLatestRevisionId($entity->id()));
-    $this->assertEquals(TRUE, $entity->isPublished());
+    $this->assertTrue($entity->isPublished());
     $this->assertEquals('published', $entity->moderation_state->value);
     $this->assertEquals('Draft title', $entity->label());
   }
 
   /**
-   * Tests moderated nodes unpublish scheduling.
+   * Tests moderated entity unpublish scheduling.
    *
    * @dataProvider dataEntityTypes()
    */
@@ -79,6 +80,7 @@ class ModeratedContentSchedulingTest extends SchedulerContentModerationTestBase 
 
     // Make sure the entity is published.
     $this->assertTrue($storage->load($entity_id)->isPublished(), 'The entity is published.');
+    $this->assertEquals(1, $revision_id, 'The initial revision id is 1');
 
     $this->container->get('cron')->run();
 
@@ -86,11 +88,11 @@ class ModeratedContentSchedulingTest extends SchedulerContentModerationTestBase 
     $this->assertFalse($storage->load($entity_id)->isPublished(), 'The entity is unpublished after cron.');
 
     // Assert only one revision is created during the operation.
-    $this->assertEquals($revision_id + 1, $storage->load($entity_id)->getRevisionId());
+    $this->assertEquals(2, $storage->load($entity_id)->getRevisionId(), 'After unpublishing, the revision id is 2');
   }
 
   /**
-   * Tests publish scheduling for a draft of a published node.
+   * Tests publish scheduling for a draft of a published entity.
    *
    * @dataProvider dataEntityTypes()
    */
@@ -117,6 +119,7 @@ class ModeratedContentSchedulingTest extends SchedulerContentModerationTestBase 
     $entity->set('publish_state', 'published');
     $entity->save();
     $revision_id = $entity->getRevisionId();
+    $this->assertEquals(2, $revision_id, 'The new pending revision id is 2');
 
     // Test latest revision is not the published one.
     $this->assertEquals('Published title', $storage->load($entity_id)->label());
@@ -127,7 +130,7 @@ class ModeratedContentSchedulingTest extends SchedulerContentModerationTestBase 
     $this->assertEquals('Draft title', $storage->load($entity_id)->label());
 
     // Assert only one revision is created during the operation.
-    $this->assertEquals($revision_id + 1, $storage->load($entity_id)->getRevisionId());
+    $this->assertEquals(3, $storage->load($entity_id)->getRevisionId(), 'After publishing, the revision id is 3');
   }
 
 }
