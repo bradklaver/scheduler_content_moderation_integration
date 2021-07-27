@@ -275,13 +275,13 @@ function scheduler_content_moderation_integration_scheduler_publish_process($ent
   /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModerationInterface $type_plugin */
   $type_plugin = $moderation_information->getWorkflowForEntity($entity)->getTypePlugin();
   try {
-    // If transition is not valid, throw exception.
     $type_plugin->getTransitionFromStateToState($entity->moderation_state->value, $state);
-    $entity->set('moderation_state', $state);
+    $entity->set('moderation_state', $state)->save();
     return 1;
   }
   catch (\InvalidArgumentException $exception) {
-    $entity->save();
+    // If transition is not valid, throw exception.
+    // $entity->save();
     return -1;
   }
 }
@@ -309,13 +309,13 @@ function scheduler_content_moderation_integration_scheduler_unpublish_process($e
   /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModerationInterface $type_plugin */
   $type_plugin = $moderation_information->getWorkflowForEntity($entity)->getTypePlugin();
   try {
-    // If transition is not valid, throw exception.
     $type_plugin->getTransitionFromStateToState($entity->moderation_state->value, $state);
-    $entity->set('moderation_state', $state);
+    $entity->set('moderation_state', $state)->save();
     return 1;
   }
   catch (\InvalidArgumentException $exception) {
-    $entity->save();
+    // If transition is not valid, throw exception.
+    // $entity->save();
     return -1;
   }
 }
