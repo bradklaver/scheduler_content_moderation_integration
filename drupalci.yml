@@ -17,6 +17,8 @@ build:
         commands:
           # Get latest dev version of Scheduler 2.x
           - "cd ${SOURCE_DIR} && sudo -u www-data composer require drupal/scheduler:2.x-dev"
+          # Apply the Scheduler events-after-save patch
+          - 'cd ${SOURCE_DIR}/modules/contrib/scheduler; pwd; sudo -u www-data curl "https://git.drupalcode.org/project/scheduler/-/merge_requests/8.diff" | sudo -u www-data patch -p1'
     testing:
       run_tests.standard:
         types: 'Simpletest,PHPUnit-Unit,PHPUnit-Kernel,PHPUnit-Functional'
