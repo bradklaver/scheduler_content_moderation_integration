@@ -281,7 +281,6 @@ function scheduler_content_moderation_integration_scheduler_publish_process($ent
   }
   catch (\InvalidArgumentException $exception) {
     // If transition is not valid, throw exception.
-    // $entity->save();
     return -1;
   }
 }
@@ -315,7 +314,6 @@ function scheduler_content_moderation_integration_scheduler_unpublish_process($e
   }
   catch (\InvalidArgumentException $exception) {
     // If transition is not valid, throw exception.
-    // $entity->save();
     return -1;
   }
 }
