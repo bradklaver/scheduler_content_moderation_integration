@@ -13,10 +13,6 @@ build:
         sniff-all-files: false
         halt-on-fail: false
         coder-version: ^8.2@stable
-      container_command:
-        commands:
-          # Get latest dev version of Scheduler 2.x
-          - "cd ${SOURCE_DIR} && sudo -u www-data composer require drupal/scheduler:2.x-dev"
     testing:
       run_tests.standard:
         types: 'Simpletest,PHPUnit-Unit,PHPUnit-Kernel,PHPUnit-Functional'
