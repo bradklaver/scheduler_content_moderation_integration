@@ -70,11 +70,13 @@ class SchedulerModerationWidget extends OptionsSelectWidget implements Container
     }
 
     $scheduler_manager = \Drupal::service('scheduler.manager');
-    $scheduling_permission_name = $scheduler_manager->permissionName($this->entity->getEntityTypeId(), 'schedule');
-    // If the user is not allowed to set the publishing or un-publishing dates
-    // or there are no options to select, then hide the element.
-    if (!\Drupal::currentUser()->hasPermission($scheduling_permission_name) || !$this->getOptions($items->getEntity())) {
-      $element['#access'] = FALSE;
+    if (!empty($this->entity)) {
+      $scheduling_permission_name = $scheduler_manager->permissionName($this->entity->getEntityTypeId(), 'schedule');
+      // If the user is not allowed to set the publishing or un-publishing dates
+      // or there are no options to select, then hide the element.
+      if (!\Drupal::currentUser()->hasPermission($scheduling_permission_name) || !$this->getOptions($items->getEntity())) {
+        $element['#access'] = FALSE;
+      }
     }
 
     return $element;
